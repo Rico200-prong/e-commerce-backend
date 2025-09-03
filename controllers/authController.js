@@ -1,7 +1,7 @@
 const User = require("../models/User.models");
 const jwt = require("jsonwebtoken");
 
-// Helper functio to create tokens
+// Helper function to create tokens
 const createToken = (userId) => {
   return jwt.sign({ userId }, process.env.JWT_SECRET, { expiresIn: "3d" });
 };
@@ -50,4 +50,59 @@ const register = async (req, res) => {
   }
 };
 
-module.exports = { register };
+// login
+const login = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    // find user by email
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Invalid Email or Password" });
+    }
+
+    // check pasword
+    const isPasswordValid = await user.comparePassword(password);
+    if (!isPasswordValid) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Invalid Email or Password " });
+    }
+
+    // creat token
+    const token = createToken(user._id);
+
+    // send response
+    res.status(200).json({
+      success: true,
+      messsage: "Login Successful",
+      token,
+      user: { id: user._id, name: user.name, email: user.email },
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Error Logging In",
+      error: error.message,
+    });
+  }
+};
+
+// user profile
+const getProfile = async (req, res) => {
+  try {
+    // req.user isset by auth middleware
+    //const user = await User.findById(req.user._id).select("-password");
+    res.json({ success: true, user });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Error getting profile",
+      error: error.message,
+    });
+  }
+};
+
+module.exports = { register, login, getProfile };
