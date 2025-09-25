@@ -52,7 +52,7 @@ const getAllProducts = async (req, res) => {
 
     res.json({
       success: true,
-      data: ProductModels,
+      data: Products,
       pagination: {
         currentPage: Number(page),
         totalPages: Math.ceil(total / Number(limit)),
@@ -107,7 +107,7 @@ const getProductById = async (req, res) => {
 };
 
 // Create new product (protectd - requires authentication)
-const creatProduct = async (req, res) => {
+const createProduct = async (req, res) => {
   try {
     const ProductData = {
       ...req.body,
@@ -236,10 +236,10 @@ const getProductByCategory = async (req, res) => {
   }
 };
 
-modile.exports = {
+module.exports = {
   getAllProducts,
   getProductById,
-  creatProduct,
+  createProduct,
   updateProduct,
   deleteProduct,
   getProductByCategory,

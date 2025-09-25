@@ -2,6 +2,7 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const authRoutes = require("./routes/auth");
+const productRoutes = require("./routes/product");
 const cors = require("cors");
 
 // enables usage of .env files - this must be at the topmost part of your server/app/index.js file
@@ -31,6 +32,7 @@ app.get("/", (req, res) => {
 
 // actual endpoints
 app.use("/api/auth", authRoutes);
+app.use("/api/products", productRoutes);
 
 // connect DB
 const connectDB = async () => {
