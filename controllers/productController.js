@@ -45,7 +45,7 @@ const getAllProducts = async (req, res) => {
       .populate("createdBy", "name email")
       .sort(sort)
       .skip(skip)
-      .limilt(Number(limit));
+      .limit(Number(limit));
 
     //Get total count for pagination
     const total = await Product.countDocuments(filter);
